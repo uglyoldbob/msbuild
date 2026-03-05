@@ -15,11 +15,12 @@ impl VsWhere {
     const DEFAULT_PATH: &'static str =
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\\vswhere.exe";
     const ENV_KEY: &'static str = "VS_WHERE_PATH";
-    const DEFAULT_ARGS: [&'static str; 6] = [
+    const DEFAULT_ARGS: [&'static str; 7] = [
         "-legacy",
         "-prerelease",
         "-format",
         "json",
+        "-utf8",
         "-products",
         "*",
     ];

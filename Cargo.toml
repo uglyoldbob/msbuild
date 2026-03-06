@@ -1,6 +1,6 @@
 [package]
 name = "msbuild"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 description = "Allows builds to run msbuild for visual studio projects"
 license = "MIT"

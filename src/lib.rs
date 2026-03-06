@@ -56,7 +56,7 @@ pub enum ProductLineVersion {
 impl ProductLineVersion {
     /// The non inclusive max installation version for a
     /// specific product line version.
-    pub fn installation_version_max(&self) -> InstallationVersion {
+    pub fn installation_version_max(&self) -> InstallationVersion<'_> {
         // Constant values that are always safe to parse.
         match self {
             Self::Vs2022 => InstallationVersion::parse("18.0.0.0").unwrap(),
@@ -67,7 +67,7 @@ impl ProductLineVersion {
 
     /// The inclusive min installation version for a
     /// specific product line version.
-    pub fn installation_version_min(&self) -> InstallationVersion {
+    pub fn installation_version_min(&self) -> InstallationVersion<'_> {
         match self {
             Self::Vs2022 => InstallationVersion::parse("17.0.0.0").unwrap(),
             Self::Vs2019 => InstallationVersion::parse("16.0.0.0").unwrap(),
@@ -179,10 +179,9 @@ impl MsBuild {
                     } else {
                         "Failed to run msbuild"
                     };
-                    Err(Error::new(
-                        ErrorKind::Other,
-                        format!("Failed to run msbuild: {error_message}"),
-                    ))
+                    Err(Error::other(format!(
+                        "Failed to run msbuild: {error_message}"
+                    )))
                 }
             })
     }
@@ -316,8 +315,8 @@ impl MsBuild {
         max: Option<&Version>,
         min: Option<&Version>,
     ) -> bool {
-        let is_below_max: bool = max.map_or(true, |max_version| max_version > version);
-        let is_above_min: bool = min.map_or(true, |min_version| version >= min_version);
+        let is_below_max: bool = max.is_none_or(|max_version| max_version > version);
+        let is_above_min: bool = min.is_none_or(|min_version| version >= min_version);
         is_below_max && is_above_min
     }
 }

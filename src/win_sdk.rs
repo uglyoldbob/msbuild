@@ -148,7 +148,7 @@ impl WinSdk {
     }
 
     /// Creates a map that maps SDK versions to directories.
-    fn versioned_directory_map(version_dirs: &[PathBuf]) -> BTreeMap<WinSdkVersion, &PathBuf> {
+    fn versioned_directory_map(version_dirs: &[PathBuf]) -> BTreeMap<WinSdkVersion<'_>, &PathBuf> {
         version_dirs
             .iter()
             .map(|d| {
@@ -208,9 +208,7 @@ impl WinSdk {
         path.file_name()
             .and_then(|ver_dir| ver_dir.to_str())
             .and_then(|ver_dir_str| WinSdkVersion::parse(ver_dir_str).ok())
-            .map_or(false, |win_sdk_ver| {
-                Self::has_version_in_range(&win_sdk_ver, max, min)
-            })
+            .is_some_and(|win_sdk_ver| Self::has_version_in_range(&win_sdk_ver, max, min))
     }
 
     fn installation_folder() -> std::io::Result<PathBuf> {
@@ -259,8 +257,8 @@ impl WinSdk {
         max: Option<&WinSdkVersion>,
         min: Option<&WinSdkVersion>,
     ) -> bool {
-        let is_below_max: bool = max.map_or(true, |max_version| max_version > version);
-        let is_above_min: bool = min.map_or(true, |min_version| version >= min_version);
+        let is_below_max: bool = max.is_none_or(|max_version| max_version > version);
+        let is_above_min: bool = min.is_none_or(|min_version| version >= min_version);
         is_below_max && is_above_min
     }
 }

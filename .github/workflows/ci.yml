@@ -32,5 +32,27 @@ jobs:
       - name: Test
         run: cargo test --verbose
 
-      - name: Test VS2022
-        run: cargo test --features has-vs2022 --verbose
+      - name: Test Visual Studio integration
+        shell: pwsh
+        run: |
+          $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+          $instances = & $vswhere -utf8 -format json -products * | ConvertFrom-Json
+          $productLineVersions = @($instances | ForEach-Object { $_.catalog.productLineVersion } | Where-Object { $_ })
+          $supportedVersions = @($productLineVersions | Where-Object { $_ -in @('2022', '2026') } | Select-Object -Unique)
+
+          if ($supportedVersions.Count -eq 0) {
+            throw 'No supported Visual Studio installation found for integration tests.'
+          }
+
+          if ($supportedVersions -contains '2022') {
+            cargo test --test test_msbuild vs2022 --verbose -- --ignored
+          }
+
+          if ($supportedVersions -contains '2026') {
+            cargo test --test test_msbuild vs2026 --verbose -- --ignored
+          }
+
+          cargo test --test test_msbuild test_find_msbuild_with_installed_version_out_of_range --verbose -- --ignored
+
+      - name: Test vswhere integration
+        run: cargo test --test test_vswhere --verbose -- --ignored --skip test_find_vswhere_env

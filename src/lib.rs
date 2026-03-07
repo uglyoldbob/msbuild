@@ -48,6 +48,7 @@ impl<'a> InstallationVersion<'a> {
 
 /// Enum holding the product line versions.
 pub enum ProductLineVersion {
+    Vs2026,
     Vs2022,
     Vs2019,
     Vs2017,
@@ -59,6 +60,7 @@ impl ProductLineVersion {
     pub fn installation_version_max(&self) -> InstallationVersion<'_> {
         // Constant values that are always safe to parse.
         match self {
+            Self::Vs2026 => InstallationVersion::parse("19.0.0.0").unwrap(),
             Self::Vs2022 => InstallationVersion::parse("18.0.0.0").unwrap(),
             Self::Vs2019 => InstallationVersion::parse("17.0.0.0").unwrap(),
             Self::Vs2017 => InstallationVersion::parse("16.0.0.0").unwrap(),
@@ -69,6 +71,7 @@ impl ProductLineVersion {
     /// specific product line version.
     pub fn installation_version_min(&self) -> InstallationVersion<'_> {
         match self {
+            Self::Vs2026 => InstallationVersion::parse("18.0.0.0").unwrap(),
             Self::Vs2022 => InstallationVersion::parse("17.0.0.0").unwrap(),
             Self::Vs2019 => InstallationVersion::parse("16.0.0.0").unwrap(),
             Self::Vs2017 => InstallationVersion::parse("15.0.0.0").unwrap(),
@@ -84,6 +87,7 @@ impl TryFrom<&str> for ProductLineVersion {
             "2017" => Ok(ProductLineVersion::Vs2017),
             "2019" => Ok(ProductLineVersion::Vs2019),
             "2022" => Ok(ProductLineVersion::Vs2022),
+            "2026" => Ok(ProductLineVersion::Vs2026),
             _ => Err(Error::new(
                 ErrorKind::InvalidData,
                 format!("Product line version {} did not match any known values.", s),
@@ -106,9 +110,9 @@ impl MsBuild {
     ///
     /// # Examples
     ///
-    /// ```
-    /// let product_line_version: Optional<&str> = Some("2017");
-    /// let msbuild: MsBuild = MsBuild::find_msbuild(product_line_version);
+    /// ```no_run
+    /// let product_line_version: Option<&str> = Some("2017");
+    /// let msbuild = msbuild::MsBuild::find_msbuild(product_line_version);
     /// ```
     pub fn find_msbuild(product_line_version: Option<&str>) -> std::io::Result<Self> {
         product_line_version

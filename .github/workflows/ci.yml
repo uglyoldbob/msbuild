@@ -24,10 +24,13 @@ jobs:
         run: cargo fmt --all -- --check
 
       - name: Clippy
-        run: cargo clippy --all-targets -- -D warnings
+        run: cargo clippy --all-targets --all-features -- -D warnings
 
       - name: Build
         run: cargo build --verbose
 
       - name: Test
         run: cargo test --verbose
+
+      - name: Test VS2022
+        run: cargo test --features has-vs2022 --verbose

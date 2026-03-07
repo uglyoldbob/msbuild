@@ -1,6 +1,6 @@
 use msbuild::VsWhere;
 
-#[ignore]
+#[cfg_attr(not(feature = "has-vs2022"), ignore)]
 #[test]
 fn test_find_vswhere() {
     // Cannot run the tests unless vswhere has
@@ -29,7 +29,7 @@ fn test_find_vswhere_env() {
     assert!(VsWhere::find_vswhere().is_ok());
 }
 
-#[ignore]
+#[cfg_attr(not(feature = "has-vs2022"), ignore)]
 #[test]
 fn test_run() {
     // Cannot run the tests unless vswhere has

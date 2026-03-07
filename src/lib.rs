@@ -106,9 +106,9 @@ impl MsBuild {
     ///
     /// # Examples
     ///
-    /// ```
-    /// let product_line_version: Optional<&str> = Some("2017");
-    /// let msbuild: MsBuild = MsBuild::find_msbuild(product_line_version);
+    /// ```no_run
+    /// let product_line_version: Option<&str> = Some("2017");
+    /// let msbuild = msbuild::MsBuild::find_msbuild(product_line_version);
     /// ```
     pub fn find_msbuild(product_line_version: Option<&str>) -> std::io::Result<Self> {
         product_line_version

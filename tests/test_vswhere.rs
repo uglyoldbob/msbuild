@@ -1,6 +1,6 @@
 use msbuild::VsWhere;
 
-#[cfg_attr(not(feature = "has-vs2022"), ignore)]
+#[ignore = "requires vswhere.exe in the test environment"]
 #[test]
 fn test_find_vswhere() {
     // Cannot run the tests unless vswhere has
@@ -9,7 +9,7 @@ fn test_find_vswhere() {
     assert!(VsWhere::find_vswhere().is_ok());
 }
 
-#[ignore]
+#[ignore = "requires VS_WHERE_PATH to point to a non-standard vswhere.exe fixture"]
 #[test]
 fn test_find_vswhere_env() {
     // Cannot run this unless there is a vswhere
@@ -29,7 +29,7 @@ fn test_find_vswhere_env() {
     assert!(VsWhere::find_vswhere().is_ok());
 }
 
-#[cfg_attr(not(feature = "has-vs2022"), ignore)]
+#[ignore = "requires vswhere.exe in the test environment"]
 #[test]
 fn test_run() {
     // Cannot run the tests unless vswhere has
@@ -38,7 +38,7 @@ fn test_run() {
     let vs_where: VsWhere =
         VsWhere::find_vswhere().expect("vswhere should have been found if it was installed.");
 
-    let args: [&str; 4] = ["-format", "json", "-products", "*"];
+    let args: [&str; 5] = ["-utf8", "-format", "json", "-products", "*"];
     let result = vs_where
         .run(Some(args.as_slice()))
         .expect("Calling with vswhere with valid args should not return an error.");

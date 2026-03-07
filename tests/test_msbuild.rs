@@ -1,13 +1,13 @@
 use msbuild::{InstallationVersion, MsBuild, ProductLineVersion};
 
-#[cfg_attr(not(feature = "has-vs2022"), ignore)]
+#[ignore = "requires Visual Studio 2022 in the test environment"]
 #[test]
 fn test_find_msbuild_vs2022() {
     assert!(MsBuild::find_msbuild(Some("2022")).is_ok());
     assert!(MsBuild::find_msbuild(None).is_ok());
 }
 
-#[cfg_attr(not(feature = "has-vs2022"), ignore)]
+#[ignore = "requires Visual Studio 2022 in the test environment"]
 #[test]
 fn test_find_msbuild_in_range_vs2022() {
     assert!(MsBuild::find_msbuild_in_range(
@@ -17,14 +17,14 @@ fn test_find_msbuild_in_range_vs2022() {
     .is_ok());
 }
 
-#[cfg_attr(not(feature = "has-vs2026"), ignore)]
+#[ignore = "requires Visual Studio 2026 in the test environment"]
 #[test]
 fn test_find_msbuild_vs2026() {
     assert!(MsBuild::find_msbuild(Some("2026")).is_ok());
     assert!(MsBuild::find_msbuild(None).is_ok());
 }
 
-#[cfg_attr(not(feature = "has-vs2026"), ignore)]
+#[ignore = "requires Visual Studio 2026 in the test environment"]
 #[test]
 fn test_find_msbuild_in_range_vs2026() {
     assert!(MsBuild::find_msbuild_in_range(
@@ -34,7 +34,7 @@ fn test_find_msbuild_in_range_vs2026() {
     .is_ok());
 }
 
-#[cfg_attr(not(any(feature = "has-vs2022", feature = "has-vs2026")), ignore)]
+#[ignore = "requires a Visual Studio installation in the test environment"]
 #[test]
 fn test_find_msbuild_with_installed_version_out_of_range() {
     let invalid_min: InstallationVersion = InstallationVersion::parse("1000.0.0.0")
